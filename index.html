@@ -4,37 +4,546 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kad Kahwin - Afiq & Alia</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #d4a373;
+      --secondary-color: #faedcd;
+      --accent-color: #e9edc9;
+      --text-color: #5c5c5c;
+      --dark-text: #333333;
+      --light-text: #ffffff;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      color: var(--text-color);
+      background-color: #fefefe;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    /* Header Section */
+    .header {
+      background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/api/placeholder/1200/800') center/cover no-repeat;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      color: var(--light-text);
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    }
+    
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle, transparent 50%, #fefefe 100%);
+      opacity: 0.1;
+    }
+    
+    .header h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .header p {
+      font-size: 1.5rem;
+      font-weight: 300;
+      margin-bottom: 1.5rem;
+      letter-spacing: 2px;
+    }
+    
+    .header h2 {
+      font-size: 2rem;
+      font-weight: 500;
+      padding: 10px 30px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 50px;
+    }
+    
+    .scroll-down {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+      cursor: pointer;
+      color: var(--light-text);
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0) translateX(-50%);
+      }
+      40% {
+        transform: translateY(-20px) translateX(-50%);
+      }
+      60% {
+        transform: translateY(-10px) translateX(-50%);
+      }
+    }
+    
+    /* Countdown Section */
+    .countdown {
+      padding: 80px 20px;
+      background-color: var(--secondary-color);
+    }
+    
+    .countdown h3 {
+      font-size: 2rem;
+      color: var(--dark-text);
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .countdown h3::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 2px;
+      background-color: var(--primary-color);
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .timer-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 30px;
+    }
+    
+    .timer-box {
+      background-color: var(--primary-color);
+      color: white;
+      width: 120px;
+      height: 120px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    .timer-box:hover {
+      transform: translateY(-10px);
+    }
+    
+    .timer-box .number {
+      font-size: 2.5rem;
+      font-weight: 600;
+    }
+    
+    .timer-box .label {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    /* Event Details Section */
+    .event-details {
+      padding: 80px 20px;
+      background-color: white;
+      position: relative;
+    }
+    
+    .event-details::before, .event-details::after {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background-color: var(--accent-color);
+      opacity: 0.5;
+      border-radius: 50%;
+      z-index: 0;
+    }
+    
+    .event-details::before {
+      top: 50px;
+      left: 50px;
+    }
+    
+    .event-details::after {
+      bottom: 50px;
+      right: 50px;
+    }
+    
+    .event-details-inner {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .event-details h3 {
+      font-size: 2rem;
+      color: var(--dark-text);
+      margin-bottom: 2rem;
+    }
+    
+    .detail-item {
+      margin-bottom: 1.5rem;
+      position: relative;
+      padding-left: 30px;
+      display: inline-block;
+      text-align: left;
+    }
+    
+    .detail-item i {
+      position: absolute;
+      left: 0;
+      top: 5px;
+      color: var(--primary-color);
+    }
+    
+    .detail-item strong {
+      display: block;
+      font-weight: 600;
+      color: var(--dark-text);
+    }
+    
+    .map-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 30px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .map-button:hover {
+      background-color: #c59362;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+    
+    .map-button i {
+      margin-right: 8px;
+    }
+    
+    /* RSVP Section */
+    .rsvp {
+      padding: 80px 20px;
+      background-color: var(--accent-color);
+    }
+    
+    .rsvp h3 {
+      font-size: 2rem;
+      color: var(--dark-text);
+      margin-bottom: 2rem;
+    }
+    
+    .rsvp-form {
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Gallery Section */
+    .gallery {
+      padding: 80px 20px;
+      background-color: white;
+    }
+    
+    .gallery h3 {
+      font-size: 2rem;
+      color: var(--dark-text);
+      margin-bottom: 2rem;
+    }
+    
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    
+    .gallery-item {
+      position: relative;
+      height: 250px;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    .gallery-item:hover {
+      transform: scale(1.05);
+    }
+    
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    /* Footer Section */
+    footer {
+      padding: 40px 20px;
+      background-color: var(--dark-text);
+      color: var(--light-text);
+    }
+    
+    .hearts {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      margin: 10px 0;
+    }
+    
+    /* Animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Media Queries */
+    @media screen and (max-width: 768px) {
+      .header h1 {
+        font-size: 3.5rem;
+      }
+      
+      .header p {
+        font-size: 1.2rem;
+      }
+      
+      .header h2 {
+        font-size: 1.5rem;
+      }
+      
+      .timer-box {
+        width: 100px;
+        height: 100px;
+      }
+      
+      .timer-box .number {
+        font-size: 2rem;
+      }
+      
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+      
+      .gallery-item {
+        height: 150px;
+      }
+    }
+    
+    @media screen and (max-width: 480px) {
+      .header h1 {
+        font-size: 2.8rem;
+      }
+      
+      .timer-box {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .timer-box .number {
+        font-size: 1.5rem;
+      }
+      
+      .timer-box .label {
+        font-size: 0.7rem;
+      }
+      
+      .event-details::before, .event-details::after {
+        width: 80px;
+        height: 80px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <section class="header">
+  <section class="header animate__animated animate__fadeIn">
     <h1>Afiq & Alia</h1>
     <p>You're invited to our wedding</p>
     <h2>20th June 2025</h2>
+    <div class="scroll-down" id="scrollDown">
+      <i class="fas fa-chevron-down fa-2x"></i>
+    </div>
   </section>
-
-  <section class="countdown">
-    <h3>Countdown to the Big Day</h3>
-    <div id="timer"></div>
+  
+  <section class="countdown fade-in">
+    <div class="container">
+      <h3>Countdown to the Big Day</h3>
+      <div class="timer-container" id="timer">
+        <!-- Timer will be populated by JS -->
+      </div>
+    </div>
   </section>
-
+  
   <section class="event-details">
-    <h3>Majlis Perkahwinan</h3>
-    <p><strong>Tarikh:</strong> 20 Jun 2025</p>
-    <p><strong>Masa:</strong> 11:00 pagi - 4:00 petang</p>
-    <p><strong>Lokasi:</strong> Dewan Serbaguna, Shah Alam</p>
-    <a href="https://waze.com/ul?ll=3.0738,101.5183" target="_blank">Buka Waze</a>
+    <div class="container">
+      <div class="event-details-inner fade-in">
+        <h3>Majlis Perkahwinan</h3>
+        <div class="detail-item">
+          <i class="fas fa-calendar-alt"></i>
+          <strong>Tarikh:</strong> 20 Jun 2025
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-clock"></i>
+          <strong>Masa:</strong> 11:00 pagi - 4:00 petang
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <strong>Lokasi:</strong> Dewan Serbaguna, Shah Alam
+        </div>
+        <a href="https://waze.com/ul?ll=3.0738,101.5183" target="_blank" class="map-button">
+          <i class="fas fa-map-marked-alt"></i> Buka Waze
+        </a>
+      </div>
+    </div>
   </section>
-
-  <section class="rsvp">
-    <h3>RSVP Kehadiran</h3>
-    <iframe src="https://docs.google.com/forms/d/e/YOUR_GOOGLE_FORM_LINK/viewform?embedded=true" width="100%" height="600" frameborder="0">Loading…</iframe>
+  
+  <section class="gallery fade-in">
+    <div class="container">
+      <h3>Our Journey</h3>
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img src="/api/placeholder/300/300" alt="Couple Photo 1">
+        </div>
+        <div class="gallery-item">
+          <img src="/api/placeholder/300/300" alt="Couple Photo 2">
+        </div>
+        <div class="gallery-item">
+          <img src="/api/placeholder/300/300" alt="Couple Photo 3">
+        </div>
+        <div class="gallery-item">
+          <img src="/api/placeholder/300/300" alt="Couple Photo 4">
+        </div>
+      </div>
+    </div>
   </section>
-
+  
+  <section class="rsvp fade-in">
+    <div class="container">
+      <h3>RSVP Kehadiran</h3>
+      <div class="rsvp-form">
+        <iframe src="https://docs.google.com/forms/d/e/YOUR_GOOGLE_FORM_LINK/viewform?embedded=true" width="100%" height="600" frameborder="0">Loading…</iframe>
+      </div>
+    </div>
+  </section>
+  
   <footer>
-    <p>Terima kasih atas doa dan kehadiran anda!</p>
+    <div class="container">
+      <div class="hearts">
+        <i class="fas fa-heart"></i>
+        <i class="fas fa-heart"></i>
+        <i class="fas fa-heart"></i>
+      </div>
+      <p>Terima kasih atas doa dan kehadiran anda!</p>
+      <p>Afiq & Alia | 2025</p>
+    </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    // Smooth scrolling
+    document.getElementById('scrollDown').addEventListener('click', function() {
+      const countdownSection = document.querySelector('.countdown');
+      countdownSection.scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    // Countdown timer
+    const targetDate = new Date("2025-06-20T11:00:00").getTime();
+    const timerContainer = document.getElementById("timer");
+    
+    function updateTimer() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+      
+      if (distance < 0) {
+        timerContainer.innerHTML = `<div class="timer-box animate__animated animate__heartBeat"><div class="number">0</div><div class="label">Days</div></div>
+                                   <div class="timer-box animate__animated animate__heartBeat"><div class="number">0</div><div class="label">Hours</div></div>
+                                   <div class="timer-box animate__animated animate__heartBeat"><div class="number">0</div><div class="label">Minutes</div></div>
+                                   <div class="timer-box animate__animated animate__heartBeat"><div class="number">0</div><div class="label">Seconds</div></div>`;
+        timerContainer.insertAdjacentHTML('afterend', '<p class="animate__animated animate__fadeIn" style="margin-top: 20px; font-size: 1.5rem; color: var(--primary-color);">The wedding has started!</p>');
+        return;
+      }
+      
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      
+      timerContainer.innerHTML = `
+        <div class="timer-box animate__animated animate__fadeIn">
+          <div class="number">${days}</div>
+          <div class="label">Days</div>
+        </div>
+        <div class="timer-box animate__animated animate__fadeIn" style="animation-delay: 0.2s">
+          <div class="number">${hours}</div>
+          <div class="label">Hours</div>
+        </div>
+        <div class="timer-box animate__animated animate__fadeIn" style="animation-delay: 0.4s">
+          <div class="number">${minutes}</div>
+          <div class="label">Minutes</div>
+        </div>
+        <div class="timer-box animate__animated animate__fadeIn" style="animation-delay: 0.6s">
+          <div class="number">${seconds}</div>
+          <div class="label">Seconds</div>
+        </div>
+      `;
+    }
+    
+    updateTimer();
+    setInterval(updateTimer, 1000);
+    
+    // Fade-in animation on scroll
+    const fadeElements = document.querySelectorAll('.fade-in');
+    
+    function checkFade() {
+      fadeElements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.classList.add('visible');
+        }
+      });
+    }
+    
+    window.addEventListener('scroll', checkFade);
+    checkFade(); // Check on load
+  </script>
 </body>
 </html>
