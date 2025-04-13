@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kad Kahwin - Kambeng</title>
+  <title>Kad Kahwin - Faiz & Raihan</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,12 +11,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #d4a373;
-      --secondary-color: #faedcd;
-      --accent-color: #e9edc9;
-      --text-color: #5c5c5c;
-      --dark-text: #333333;
-      --light-text: #ffffff;
+      --primary-color: #6e1a1a; /* Darker red theme to match your image */
+      --secondary-color: #f5d3d6; /* Light red */
+      --accent-color: #fff5f6; /* Very light red */
+      --text-color: #ffffff; /* White text */
+      --dark-text: #ffffff; /* White text for heading */
+      --light-text: #ffffff; /* White text */
+      --envelope-color: #6e1a1a; /* Dark red envelope */
+      --envelope-flap: #5a1616; /* Darker red */
+      --envelope-inner: #fff5f6; /* Very light red */
+      --envelope-border: #4a1212; /* Darkest red */
     }
     
     * {
@@ -29,9 +33,14 @@
       font-family: 'Montserrat', sans-serif;
       text-align: center;
       color: var(--text-color);
-      background-color: #fefefe;
+      background-color: var(--accent-color);
       line-height: 1.6;
       overflow-x: hidden;
+      /* Remove the old background pattern and use your own background image */
+      background-image: url('assets/images/try2.png'); /* You will need to place your own image here */
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
     }
     
     .container {
@@ -39,85 +48,477 @@
       margin: 0 auto;
       padding: 0 20px;
     }
+
+    /* Audio control */
+    .audio-control {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: var(--primary-color);
+      color: var(--light-text);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .audio-control.visible {
+      opacity: 1;
+    }
     
-    /* Header Section */
-    .header {
-      background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/api/placeholder/1200/800') center/cover no-repeat;
+    /* Envelope Section */
+    .envelope-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
       height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: white !important;
+      background-image: none !important;
+      background-size: cover;
+      background-position: center;
+      z-index: 1000;
+      transition: opacity 1s ease;
+      overflow: hidden; /* Prevent scrolling while envelope is visible */
+    }
+    
+    .envelope {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+    
+    .envelope-base {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: var(--envelope-color);
+      border: 2px solid var(--envelope-border);
+      border-radius: 5px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--envelope-flap);
+      transform-origin: top;
+      transition: transform 1s ease;
+      border: 2px solid var(--envelope-border);
+      border-radius: 5px;
+      clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
+      z-index: 2;
+    }
+    
+    .envelope-content {
+      position: absolute;
+      width: 90%;
+      height: 90%;
+      top: 5%;
+      left: 5%;
+      background-color: var(--envelope-inner);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transform: translateZ(1px);
+      transition: transform 1s ease 0.5s;
+      border-radius: 3px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+    
+    .envelope.opened .envelope-flap {
+      transform: rotateX(180deg);
+    }
+    
+    .envelope.opened .envelope-content {
+      transform: translateY(-120px) translateZ(1px);
+    }
+    
+    .envelope-text {
+      font-family: 'Great Vibes', cursive;
+      color: var(--primary-color);
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    
+    .open-button {
+      padding: 10px 20px;
+      background-color: var(--primary-color);
+      color: var(--light-text);
+      border: none;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Montserrat', sans-serif;
+    }
+    
+    .open-button:hover {
+      background-color: var(--envelope-border);
+      transform: translateY(-3px);
+    }
+    
+    /* Main Content Styles */
+    .page-content {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 1s ease;
+    }
+    
+    .page-content.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    /* Header Section - Revised layout */
+    .header {
+      height: 70vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       position: relative;
       color: var(--light-text);
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.4); /* Semi-transparent overlay */
+      padding-top: 80px;
     }
     
-    .header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: radial-gradient(circle, transparent 50%, #fefefe 100%);
-      opacity: 0.1;
+    .header-inner {
+      padding: 60px 20px;
+      width: 100%;
+      max-width: 700px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      animation: fadeInUp 1.5s ease;
     }
     
     .header h1 {
-      font-family: 'Great Vibes', cursive;
+      font-family: 'Helvetica', cursive;
       font-size: 5rem;
-      margin-bottom: 1rem;
-    }
-    
-    .header p {
-      font-size: 1.5rem;
-      font-weight: 300;
       margin-bottom: 1.5rem;
+      animation: fadeIn 2s ease;
+    }
+    
+     /* Updated styling to match your example */
+     .header .walimatul {
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 2rem;
       letter-spacing: 2px;
+      animation: fadeIn 2s ease;
+      text-transform: uppercase;
     }
     
-    .header h2 {
-      font-size: 2rem;
+    .header .day-date {
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
+      animation: fadeIn 3s ease;
+    }
+    
+    .header .location {
+      font-size: 1.8rem;
       font-weight: 500;
-      padding: 10px 30px;
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      border-radius: 50px;
+      margin-top: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      animation: fadeIn 3.5s ease;
+    }
+
+    .walimatul-section {
+    margin: 40px auto;
+    max-width: 800px;
+  }
+  
+  .walimatul-section h4 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.5rem;
+    color: var(--light-text);
+    margin-bottom: 1rem;
+  }
+
+  .family-names {
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+  }
+  
+  .invitation-text {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+  
+  .couple-names {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .couple-names .ampersand {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+  }
+  
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
     
-    .scroll-down {
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInDown {
+      from { 
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInLeft {
+      from { 
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    @keyframes fadeInRight {
+      from { 
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    /* Event Details Section */
+    .event-details {
+      padding: 80px 20px;
+      background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background */
+    }
+    
+    .event-details-inner {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .event-details h3 {
+      font-size: 2.2rem;
+      color: var(--light-text);
+      margin-bottom: 2rem;
+      font-family: 'Great Vibes', cursive;
+      animation: fadeInDown 1s ease;
+    }
+    
+    .detail-item {
+      margin-bottom: 1.5rem;
+      position: relative;
+      padding-left: 30px;
+      display: inline-block;
+      text-align: left;
+      animation: fadeInUp 1s ease;
+      animation-fill-mode: both;
+    }
+    
+    .detail-item:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    .detail-item:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    
+    .detail-item:nth-child(4) {
+      animation-delay: 0.6s;
+    }
+    
+    .detail-item i {
       position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      animation: bounce 2s infinite;
-      cursor: pointer;
+      left: 0;
+      top: 5px;
+      color: var(--secondary-color);
+    }
+    
+    .detail-item strong {
+      display: block;
+      font-weight: 600;
       color: var(--light-text);
     }
     
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0) translateX(-50%);
-      }
-      40% {
-        transform: translateY(-20px) translateX(-50%);
-      }
-      60% {
-        transform: translateY(-10px) translateX(-50%);
-      }
+    .map-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 30px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      animation: fadeInUp 1s ease;
+      animation-delay: 0.8s;
+      animation-fill-mode: both;
     }
     
-    /* Countdown Section */
+    .map-button:hover {
+      background-color: var(--envelope-border);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .map-button i {
+      margin-right: 8px;
+    }
+    
+    /* Tentative Schedule Section */
+    .tentative {
+      padding: 80px 20px;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    .tentative h3 {
+      font-size: 2.2rem;
+      color: var(--light-text);
+      margin-bottom: 2rem;
+      position: relative;
+      font-family: 'Great Vibes', cursive;
+      animation: fadeInDown 1s ease;
+    }
+    
+    .tentative h3::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 2px;
+      background-color: var(--primary-color);
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .schedule-container {
+      max-width: 800px;
+      margin: 40px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .schedule-item {
+      display: flex;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeInRight 1s ease;
+      animation-fill-mode: both;
+    }
+    
+    .schedule-item:nth-child(1) { animation-delay: 0.1s; }
+    .schedule-item:nth-child(2) { animation-delay: 0.2s; }
+    .schedule-item:nth-child(3) { animation-delay: 0.3s; }
+    .schedule-item:nth-child(4) { animation-delay: 0.4s; }
+    .schedule-item:nth-child(5) { animation-delay: 0.5s; }
+    .schedule-item:nth-child(6) { animation-delay: 0.6s; }
+    
+    .schedule-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .schedule-time {
+      width: 120px;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 10px;
+      text-align: center;
+    }
+    
+    .schedule-time span {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .schedule-details {
+      flex-grow: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .schedule-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--light-text);
+      margin-bottom: 5px;
+    }
+    
+    .schedule-description {
+      color: var(--text-color);
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    /* Countdown Section - Moved to the end */
     .countdown {
       padding: 80px 20px;
-      background-color: var(--secondary-color);
+      background-color: rgba(0, 0, 0, 0.7);
     }
     
     .countdown h3 {
-      font-size: 2rem;
-      color: var(--dark-text);
+      font-size: 2.2rem;
+      color: var(--light-text);
       margin-bottom: 2rem;
       position: relative;
+      font-family: 'Great Vibes', cursive;
+      animation: fadeInDown 1s ease;
     }
     
     .countdown h3::after {
@@ -133,15 +534,18 @@
     }
     
     .timer-container {
-      display: flex;
+        display: flex;
       justify-content: center;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 20px;
       margin-top: 30px;
     }
     
     .timer-box {
       background-color: var(--primary-color);
+      flex: 1;
+    min-width: 80px;
+    max-width: 120px;
       color: white;
       width: 120px;
       height: 120px;
@@ -150,9 +554,26 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease;
+      animation: none !important; 
     }
+    .reveal-text {
+    position: relative;
+    opacity: 0;
+  }
+  
+  .reveal-letter {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+    
+    .timer-box:nth-child(1) { animation-delay: 0.1s; }
+    .timer-box:nth-child(2) { animation-delay: 0.2s; }
+    .timer-box:nth-child(3) { animation-delay: 0.3s; }
+    .timer-box:nth-child(4) { animation-delay: 0.4s; }
     
     .timer-box:hover {
       transform: translateY(-10px);
@@ -169,152 +590,10 @@
       letter-spacing: 1px;
     }
     
-    /* Event Details Section */
-    .event-details {
-      padding: 80px 20px;
-      background-color: white;
-      position: relative;
-    }
-    
-    .event-details::before, .event-details::after {
-      content: '';
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      background-color: var(--accent-color);
-      opacity: 0.5;
-      border-radius: 50%;
-      z-index: 0;
-    }
-    
-    .event-details::before {
-      top: 50px;
-      left: 50px;
-    }
-    
-    .event-details::after {
-      bottom: 50px;
-      right: 50px;
-    }
-    
-    .event-details-inner {
-      position: relative;
-      z-index: 1;
-    }
-    
-    .event-details h3 {
-      font-size: 2rem;
-      color: var(--dark-text);
-      margin-bottom: 2rem;
-    }
-    
-    .detail-item {
-      margin-bottom: 1.5rem;
-      position: relative;
-      padding-left: 30px;
-      display: inline-block;
-      text-align: left;
-    }
-    
-    .detail-item i {
-      position: absolute;
-      left: 0;
-      top: 5px;
-      color: var(--primary-color);
-    }
-    
-    .detail-item strong {
-      display: block;
-      font-weight: 600;
-      color: var(--dark-text);
-    }
-    
-    .map-button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 30px;
-      background-color: var(--primary-color);
-      color: white;
-      text-decoration: none;
-      border-radius: 50px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    .map-button:hover {
-      background-color: #c59362;
-      transform: translateY(-3px);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    }
-    
-    .map-button i {
-      margin-right: 8px;
-    }
-    
-    /* RSVP Section */
-    .rsvp {
-      padding: 80px 20px;
-      background-color: var(--accent-color);
-    }
-    
-    .rsvp h3 {
-      font-size: 2rem;
-      color: var(--dark-text);
-      margin-bottom: 2rem;
-    }
-    
-    .rsvp-form {
-      max-width: 700px;
-      margin: 0 auto;
-      background-color: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Gallery Section */
-    .gallery {
-      padding: 80px 20px;
-      background-color: white;
-    }
-    
-    .gallery h3 {
-      font-size: 2rem;
-      color: var(--dark-text);
-      margin-bottom: 2rem;
-    }
-    
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-      margin-top: 30px;
-    }
-    
-    .gallery-item {
-      position: relative;
-      height: 250px;
-      overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
-    }
-    
-    .gallery-item:hover {
-      transform: scale(1.05);
-    }
-    
-    .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
     /* Footer Section */
     footer {
       padding: 40px 20px;
-      background-color: var(--dark-text);
+      background-color: rgba(0, 0, 0, 0.8);
       color: var(--light-text);
     }
     
@@ -322,18 +601,12 @@
       font-size: 1.5rem;
       color: var(--primary-color);
       margin: 10px 0;
+      animation: pulse 1.5s infinite alternate;
     }
     
-    /* Animations */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    }
-    
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.1); }
     }
     
     /* Media Queries */
@@ -342,11 +615,15 @@
         font-size: 3.5rem;
       }
       
-      .header p {
+      .header .walimatul {
+        font-size: 1.8rem;
+      }
+      
+      .header .day-date {
         font-size: 1.2rem;
       }
       
-      .header h2 {
+      .header .location {
         font-size: 1.5rem;
       }
       
@@ -359,12 +636,22 @@
         font-size: 2rem;
       }
       
-      .gallery-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      .schedule-item {
+        flex-direction: column;
       }
       
-      .gallery-item {
-        height: 150px;
+      .schedule-time {
+        width: 100%;
+        padding: 10px;
+      }
+      
+      .envelope {
+        width: 280px;
+        height: 180px;
+      }
+      
+      .envelope-text {
+        font-size: 1.5rem;
       }
     }
     
@@ -372,221 +659,458 @@
       .header h1 {
         font-size: 2.8rem;
       }
+     
       
       .timer-box {
-        width: 80px;
-        height: 80px;
+        min-width: 70px;
+      height: 70px;
       }
       
       .timer-box .number {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
       }
       
       .timer-box .label {
-        font-size: 0.7rem;
+        font-size: 0.6rem;
       }
       
-      .event-details::before, .event-details::after {
-        width: 80px;
-        height: 80px;
+      .envelope {
+        width: 260px;
+        height: 160px;
       }
     }
   </style>
 </head>
 <body>
-  <section class="header animate__animated animate__fadeIn">
-    <h1>Afiq & Alia</h1>
-    <p>You're invited to our wedding</p>
-    <h2>20th June 2025</h2>
-    <div class="scroll-down" id="scrollDown">
-      <i class="fas fa-chevron-down fa-2x"></i>
-    </div>
-  </section>
-  
-  <section class="countdown fade-in">
-    <div class="container">
-      <h3>Countdown to the Big Day</h3>
-      <div class="timer-container" id="timer">
-        <!-- Timer will be populated by JS -->
+  <!-- Envelope Opening Animation -->
+  <div class="envelope-container" id="envelopeContainer">
+    <div class="envelope" id="envelope">
+      <div class="envelope-base"></div>
+      <div class="envelope-flap"></div>
+      <div class="envelope-content">
+        <h2 class="envelope-text">Jemputan Kahwin</h2>
+        <button class="open-button" id="openButton">Buka</button>
       </div>
     </div>
-  </section>
+  </div>
   
-  <section class="event-details">
-    <div class="container">
-      <div class="event-details-inner fade-in">
-        <h3>Majlis Perkahwinan</h3>
-        <div class="detail-item">
-          <i class="fas fa-calendar-alt"></i>
-          <strong>Tarikh:</strong> 20 Jun 2025
-        </div>
-        <div class="detail-item">
-          <i class="fas fa-clock"></i>
-          <strong>Masa:</strong> 11:00 pagi - 4:00 petang
-        </div>
-        <div class="detail-item">
-          <i class="fas fa-map-marker-alt"></i>
-          <strong>Lokasi:</strong> Dewan Serbaguna, Shah Alam
-        </div>
-        <a href="https://waze.com/ul?ll=3.0738,101.5183" target="_blank" class="map-button">
-          <i class="fas fa-map-marked-alt"></i> Buka Waze
-        </a>
-      </div>
-    </div>
-  </section>
+  <!-- Audio Control -->
+  <div class="audio-control" id="audioControl">
+    <i class="fas fa-volume-up" id="audioIcon"></i>
+  </div>
   
-  <section class="gallery fade-in">
-    <div class="container">
-      <h3>Our Journey</h3>
-      <div class="gallery-grid">
-        <div class="gallery-item">
-          <img src="/api/placeholder/300/300" alt="Couple Photo 1">
-        </div>
-        <div class="gallery-item">
-          <img src="/api/placeholder/300/300" alt="Couple Photo 2">
-        </div>
-        <div class="gallery-item">
-          <img src="/api/placeholder/300/300" alt="Couple Photo 3">
-        </div>
-        <div class="gallery-item">
-          <img src="/api/placeholder/300/300" alt="Couple Photo 4">
+  <!-- Background Music -->
+  <audio id="bgMusic" loop>
+    <source src="assets/audio/background-music.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Main Content -->
+  <div class="page-content" id="pageContent">
+    <section class="header">
+      <div class="header-inner">
+        <p class="walimatul">WALIMATUL URUS</p>
+        <h1>FAIZ</h1>
+        <p class="ampersand">&amp;</p>
+        <h1>RAIHAN</h1>
+        <p class="day-date">ISNIN • 02.06.25</p>
+        <p class="location">MERBOK</p>
+      </div>
+    </section>
+
+    <section class="event-details">
+      <div class="container">
+        <div class="event-details-inner fade-in">
+          
+          <!-- New content for Walimatul Urus -->
+          <div class="walimatul-section">
+            <h4>Walimatul Urus</h4>
+            <p class="family-names">Hamdan Bin Halim</p>
+            <p class="family-names"> &amp;</p>
+            <p class="family-names"> MAKIDAH</p>
+            <br>
+            <div class="invitation-text">
+              <p>Dengan penuh kesyukuran, kami mempersilakan<br>
+              Tuan | Puan | Encik | Cik<br>
+              seisi keluarga hadir ke majlis perkahwinan anakanda kami</p>
+              <br>
+              <div class="couple-names">
+                <span>Faiz Bin Hamdan</span>
+           
+              </div>
+              <div>
+      
+                <p class="ampersand">&amp;</p>
+           
+              </div>
+              <div class="couple-names">
+             
+                <span>Raihan Binti Simpulan</span>
+              </div>
+            </div>
+          </div>
+    
+    <section class="event-details">
+      <div class="container">
+        <div class="event-details-inner">
+          <h3>Majlis Perkahwinan</h3>
+          
+          <!-- Address details -->
+          <div class="detail-item">
+            <i class="fas fa-calendar-alt"></i>
+            <strong>Tarikh:</strong> 1 Jun 2025
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-clock"></i>
+            <strong>Masa:</strong> 11:00 pagi - 4:00 petang
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <strong>Lokasi:</strong> Dewan Serbaguna, Merbok
+          </div>
+          
+          <!-- Centered map buttons container -->
+          <div class="map-buttons-container">
+            <a href="https://waze.com/ul?ll=3.0738,101.5183" target="_blank" class="map-button">
+              <i class="fas fa-map-marked-alt"></i> Buka Waze
+            </a>
+            <a href="https://maps.google.com/?q=Dewan+Serbaguna+Merbok" target="_blank" class="map-button google-map-button">
+              <i class="fab fa-google"></i> Google Maps
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-  
-  <section class="rsvp fade-in">
-    <div class="container">
-      <h3>RSVP Kehadiran</h3>
-      <div class="rsvp-form">
-        <iframe src="https://docs.google.com/forms/d/e/YOUR_GOOGLE_FORM_LINK/viewform?embedded=true" width="100%" height="600" frameborder="0">Loading…</iframe>
+    </section>
+    
+    <!-- Tentative Schedule -->
+    <section class="tentative">
+      <div class="container">
+        <h3>Aturcara Majlis</h3>
+        <div class="schedule-container">
+          <div class="schedule-item">
+            <div class="schedule-time">
+              <span>11:00 AM</span>
+            </div>
+            <div class="schedule-details">
+              <div class="schedule-title">Ketibaan Tetamu</div>
+            </div>
+          </div>
+          
+          <div class="schedule-item">
+            <div class="schedule-time">
+              <span>12:30 PM</span>
+            </div>
+            <div class="schedule-details">
+              <div class="schedule-title">Ketibaan Pengantin</div>
+              <div class="schedule-description">Upacara iringan pengantin masuk</div>
+            </div>
+          </div>
+          
+          <div class="schedule-item">
+            <div class="schedule-time">
+              <span>12:45 PM</span>
+            </div>
+            <div class="schedule-details">
+              <div class="schedule-title">Majlis Persandingan</div>
+              <div class="schedule-description">Adat persandingan pengantin di pelamin</div>
+            </div>
+          </div>
+          
+          <div class="schedule-item">
+            <div class="schedule-time">
+              <span>1:30 PM</span>
+            </div>
+            <div class="schedule-details">
+              <div class="schedule-title">Makan Beradab</div>
+            </div>
+          </div>
+          
+          <div class="schedule-item">
+            <div class="schedule-time">
+              <span>4:00 PM</span>
+            </div>
+            <div class="schedule-details">
+              <div class="schedule-title">Majlis Berakhir</div>
+              <div class="schedule-description">Bersurai</div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
-  
-  <footer>
-    <div class="container">
-      <div class="hearts">
-        <i class="fas fa-heart"></i>
-        <i class="fas fa-heart"></i>
-        <i class="fas fa-heart"></i>
+    </section>
+    
+    <!-- Countdown moved to the end -->
+    <section class="countdown">
+      <div class="container">
+        <h3>Menghitung Hari</h3>
+        <div class="timer-container" id="timer">
+          <!-- Timer will be populated by JS -->
+        </div>
       </div>
-      <p>Terima kasih atas doa dan kehadiran anda!</p>
-      <p>Afiq & Alia | 2025</p>
-    </div>
-  </footer>
+    </section>
+    
+    <footer>
+      <div class="container">
+        <div class="hearts">
+          <i class="fas fa-heart"></i>
+          <i class="fas fa-heart"></i>
+          <i class="fas fa-heart"></i>
+        </div>
+        <p>Terima kasih atas doa dan kehadiran anda!</p>
+        <p>Faiz &amp; Raihan | 2025</p>
+      </div>
+    </footer>
+  </div>
 
   <script>
-    // Smooth scrolling
-    document.getElementById('scrollDown').addEventListener('click', function() {
-      const countdownSection = document.querySelector('.countdown');
-      countdownSection.scrollIntoView({ behavior: 'smooth' });
+    // DOM Elements
+    const envelope = document.getElementById('envelope');
+    const envelopeContainer = document.getElementById('envelopeContainer');
+    const openButton = document.getElementById('openButton');
+    const pageContent = document.getElementById('pageContent');
+    const audioControl = document.getElementById('audioControl');
+    const audioIcon = document.getElementById('audioIcon');
+    const bgMusic = document.getElementById('bgMusic');
+
+    // Variables
+    let isMuted = true; // Start muted to avoid autoplay issues
+    let isScrolling = false;
+    let scrollTimeout;
+    let scrollSpeed = 0.3; // Pixels per scroll step (adjust for speed)
+
+    // Block page scrolling when envelope is visible
+    document.body.style.overflow = 'hidden';
+
+    // Show audio control after envelope opens
+    function showAudioControl() {
+      setTimeout(() => {
+        audioControl.classList.add('visible');
+      }, 2000);
+    }
+
+    // Toggle audio
+    audioControl.addEventListener('click', () => {
+      if (isMuted) {
+        bgMusic.play();
+        audioIcon.className = 'fas fa-volume-up';
+      } else {
+        bgMusic.pause();
+        audioIcon.className = 'fas fa-volume-mute';
+      }
+      isMuted = !isMuted;
+      audioControl.classList.add('pulse-animation');
+      setTimeout(() => {
+        audioControl.classList.remove('pulse-animation');
+      }, 1000);
+    });
+
+    // Open envelope animation
+    openButton.addEventListener('click', () => {
+      envelope.classList.add('opened');
+      
+      // Play background music on user interaction
+      bgMusic.play();
+      isMuted = false;
+      audioIcon.className = 'fas fa-volume-up';
+      
+      // Enable page scrolling
+      document.body.style.overflow = '';
+      
+      // Start automatic scrolling
+      setTimeout(() => {
+        envelopeContainer.style.opacity = '0';
+        setTimeout(() => {
+          envelopeContainer.style.display = 'none';
+          pageContent.classList.add('visible');
+          showAudioControl();
+          window.scrollTo(0, 0)
+          startAutoScroll();
+          
+          // Trigger animations for elements already in view
+          const elements = document.querySelectorAll('.fade-in');
+          elements.forEach(element => {
+            if (isElementInViewport(element)) {
+              element.classList.add('visible');
+            }
+          });
+        }, 1000);
+      }, 1500);
+    });
+
+    // Check if element is in viewport
+    function isElementInViewport(el) {
+      const rect = el.getBoundingClientRect();
+      return (
+        rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.bottom >= 0
+      );
+    }
+
+    // Auto-scroll function
+    function startAutoScroll() {
+      if (!isScrolling) {
+        isScrolling = true;
+        let scrollPosition = window.scrollY;
+        const maxScroll = document.body.scrollHeight - window.innerHeight;
+        
+        function smoothScroll() {
+          scrollPosition += scrollSpeed;
+          if (scrollPosition >= maxScroll) {
+            scrollPosition = maxScroll;
+            isScrolling = false;
+            return;
+          }
+          
+          window.scrollTo(0, scrollPosition);
+          if (isScrolling) {
+            requestAnimationFrame(smoothScroll);
+          }
+        }
+        
+        smoothScroll();
+      }
+    }
+
+    // Stop scrolling on user interaction
+    window.addEventListener('wheel', function() {
+      isScrolling = false;
+    });
+
+    window.addEventListener('touchstart', function() {
+      isScrolling = false;
+    });
+
+    window.addEventListener('keydown', function() {
+      isScrolling = false;
+    });
+
+// Countdown Timer
+function updateCountdown() {
+  const weddingDate = new Date('June 1, 2025 12:00:00').getTime();
+  const now = new Date().getTime();
+  const timeDifference = weddingDate - now;
+  
+  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+  
+  document.getElementById('timer').innerHTML = `
+    <div class="timer-box">
+      <div class="number">${days}</div>
+      <div class="label">Hari</div>
+    </div>
+    <div class="timer-box">
+      <div class="number">${hours}</div>
+      <div class="label">Jam</div>
+    </div>
+    <div class="timer-box">
+      <div class="number">${minutes}</div>
+      <div class="label">Minit</div>
+    </div>
+    <div class="timer-box">
+      <div class="number">${seconds}</div>
+      <div class="label">Saat</div>
+    </div>
+  `;
+  
+  if (timeDifference < 0) {
+    clearInterval(countdownInterval);
+    document.getElementById('timer').innerHTML = `
+      <div class="timer-box">
+        <div class="number">0</div>
+        <div class="label">Hari</div>
+      </div>
+      <div class="timer-box">
+        <div class="number">0</div>
+        <div class="label">Jam</div>
+      </div>
+      <div class="timer-box">
+        <div class="number">0</div>
+        <div class="label">Minit</div>
+      </div>
+      <div class="timer-box">
+        <div class="number">0</div>
+        <div class="label">Saat</div>
+      </div>
+    `;
+  }
+}
+
+// Update the countdown every second
+const countdownInterval = setInterval(updateCountdown, 1000);
+updateCountdown(); // Initial call
+
+// Fade in elements when scrolled into view
+function revealOnScroll() {
+  const fadeElements = document.querySelectorAll('.fade-in');
+  const windowHeight = window.innerHeight;
+  
+  fadeElements.forEach(element => {
+    const elementTop = element.getBoundingClientRect().top;
+    if (elementTop < windowHeight - 100) {
+      element.classList.add('visible');
+    }
+  });
+}
+
+// Listen for scroll events
+window.addEventListener('scroll', revealOnScroll);
+window.addEventListener('load', revealOnScroll);
+
+// Add smooth scrolling for all anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    document.querySelector(this.getAttribute('href')).scrollIntoView({
+      behavior: 'smooth'
+    });
+  });
+});
+
+// Initialize the page
+window.addEventListener('load', () => {
+  // Preload animations
+  setTimeout(() => {
+    revealOnScroll();
+  }, 500);
+});
+
+
+
+// Add responsive handling for smaller screens
+function handleResponsiveLayout() {
+  if (window.innerWidth <= 768) {
+    // Mobile-specific adjustments
+    document.querySelectorAll('.detail-item').forEach(item => {
+      item.style.display = 'block';
+      item.style.textAlign = 'center';
+      item.style.paddingLeft = '0';
     });
     
-   // Countdown timer
-const targetDate = new Date("2025-06-20T11:00:00").getTime();
-const timerContainer = document.getElementById("timer");
-
-function updateTimer() {
-  const now = new Date().getTime();
-  const distance = targetDate - now;
-  
-  if (distance < 0) {
-    timerContainer.innerHTML = `<div class="timer-box">
-                               <div class="number">0</div>
-                               <div class="label">Days</div>
-                             </div>
-                             <div class="timer-box">
-                               <div class="number">0</div>
-                               <div class="label">Hours</div>
-                             </div>
-                             <div class="timer-box">
-                               <div class="number">0</div>
-                               <div class="label">Minutes</div>
-                             </div>
-                             <div class="timer-box">
-                               <div class="number">0</div>
-                               <div class="label">Seconds</div>
-                             </div>`;
-    timerContainer.insertAdjacentHTML('afterend', '<p style="margin-top: 20px; font-size: 1.5rem; color: var(--primary-color);">The wedding has started!</p>');
-    return;
+    document.querySelectorAll('.detail-item i').forEach(icon => {
+      icon.style.position = 'static';
+      icon.style.marginBottom = '10px';
+    });
+  } else {
+    // Reset styles for larger screens
+    document.querySelectorAll('.detail-item').forEach(item => {
+      item.style.display = 'inline-block';
+      item.style.textAlign = 'left';
+      item.style.paddingLeft = '30px';
+    });
+    
+    document.querySelectorAll('.detail-item i').forEach(icon => {
+      icon.style.position = 'absolute';
+      icon.style.marginBottom = '0';
+    });
   }
-  
-  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-  
-  // Update without recreating elements
-  document.getElementById('days').textContent = days;
-  document.getElementById('hours').textContent = hours;
-  document.getElementById('minutes').textContent = minutes;
-  document.getElementById('seconds').textContent = seconds;
-  
-  // Add pulse animation to seconds box
-  const secondsBox = document.getElementById('seconds-box');
-  secondsBox.classList.add('pulse-animation');
-  setTimeout(() => {
-    secondsBox.classList.remove('pulse-animation');
-  }, 900);
 }
 
-// Create timer boxes once
-timerContainer.innerHTML = `
-  <div class="timer-box">
-    <div class="number" id="days">-</div>
-    <div class="label">Days</div>
-  </div>
-  <div class="timer-box">
-    <div class="number" id="hours">-</div>
-    <div class="label">Hours</div>
-  </div>
-  <div class="timer-box">
-    <div class="number" id="minutes">-</div>
-    <div class="label">Minutes</div>
-  </div>
-  <div class="timer-box" id="seconds-box">
-    <div class="number" id="seconds">-</div>
-    <div class="label">Seconds</div>
-  </div>
-`;
-
-// Add this CSS
-`.pulse-animation {
-  animation: pulse 1s;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}`
-
-updateTimer();
-setInterval(updateTimer, 1000);
-    
-    // Fade-in animation on scroll
-    const fadeElements = document.querySelectorAll('.fade-in');
-    
-    function checkFade() {
-      fadeElements.forEach(element => {
-        const elementTop = element.getBoundingClientRect().top;
-        const elementVisible = 150;
-        
-        if (elementTop < window.innerHeight - elementVisible) {
-          element.classList.add('visible');
-        }
-      });
-    }
-    
-    window.addEventListener('scroll', checkFade);
-    checkFade(); // Check on load
+// Call on load and resize
+window.addEventListener('load', handleResponsiveLayout);
+window.addEventListener('resize', handleResponsiveLayout);
   </script>
+
+
 </body>
 </html>
